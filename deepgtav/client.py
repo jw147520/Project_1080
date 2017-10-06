@@ -54,11 +54,24 @@ class Client:
         if not frame: 
             print('ERROR: Failed to receive frame')     
             return None
+
         data = self._recvall()
         if not data: 
             print('ERROR: Failed to receive message')       
             return None
         return self.targets.parse(frame, data.decode('utf-8'))
+
+    def recvMessage_modified(self):
+        frame = self._recvall()
+        if not frame:
+            print('ERROR: Failed to receive frame')
+            return None
+
+        data = self._recvall()
+        if not data:
+            print('ERROR: Failed to receive message')
+            return None
+        return self.targets.parse(data.decode('utf-8'))
 
     def _recvall(self):
         #Receive first size of message in bytes

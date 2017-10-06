@@ -1,10 +1,9 @@
 # Project_1080 : create_dataset.py
 # Reference : https://github.com/cpgeier/SantosNet
 
-from deepgtav.messages import Start, Stop, Dataset, frame2numpy, Scenario, Config
+from deepgtav.messages import Start, Stop, Dataset, Scenario, Config
 from deepgtav.client import Client
 import argparse
-# import time
 import datetime
 import cv2
 
@@ -15,6 +14,7 @@ time = [12, 0]  # 시간
 drivingMode = [786603, 40.0]  # 운전모드 [mode flag, maximum speed]
 location = [-2573.13916015625, 3292.256103515625, 13.241103172302246]  # 시작 위치
 frame = [800, 600]  # 화면 크기
+dataset_path = 'dataset.pz'
 
 """ 
 자세한 flag 정보는 http://gtaforums.com/topic/822314-guide-driving-styles/ 참고
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=None)
     parser.add_argument('-l', '--host', default='localhost', help='The IP where DeepGTAV is running')
     parser.add_argument('-p', '--port', default=8000, help='The port where DeepGTAV is running')
-    parser.add_argument('-d', '--dataset_path', default='dataset_test.pz', help='Place to store the dataset')
+    parser.add_argument('-d', '--dataset_path', default=dataset_path, help='Place to store the dataset')
     args = parser.parse_args()
 
     # Create a new connection to DeepGTAV using the specified IP and Port
@@ -60,13 +60,15 @@ if __name__ == '__main__':
 
     while True:  # Main Loop
         current_time = datetime.datetime.now()
-        if current_time >= start_time + datetime.timedelta(hours=1):
+        if current_time >= start_time + datetime.timedelta(hours=3):
             print("Finished recording at " + str(current_time))
             break
 
         try:
             # Message received as a Python dictionary
             message = client.recvMessage()
+            del message['frame']
+            print(message)
             if started is False:
                 start_time = datetime.datetime.now()
                 print("Start recording at " + str(start_time))

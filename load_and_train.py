@@ -24,7 +24,7 @@ try:
             y_train = np_utils.to_categorical(y_train, num_classes=1000)
             y_test = np_utils.to_categorical(y_test, num_classes=1000)
             # Fit model to batch
-            model.fit(x_train, y_train, verbose=1,epochs=1, validation_data=(x_test, y_test))
+            model.fit(x_train, y_train, verbose=1, epochs=1, validation_data=(x_test, y_test))
             
             batch_count += 1
             # Save a checkpoint
