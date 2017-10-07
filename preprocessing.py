@@ -5,9 +5,11 @@ import pickle
 import gzip
 from deepgtav.messages import frame2numpy
 
+dataset_path = 'dataset.pz'
+
 def load_batches(verbose=1,samples_per_batch=1000):
-    ''' Generator for loading batches of frames'''
-    dataset = gzip.open('dataset.pz')
+    # Generator for loading batches of frames
+    dataset = gzip.open(dataset_path)
     batch_count = 0
     while True:
         try:
@@ -20,8 +22,8 @@ def load_batches(verbose=1,samples_per_batch=1000):
             while count < samples_per_batch:
                     data_dct = pickle.load(dataset)
                     frame = data_dct['frame']
-                    image = frame2numpy(frame, (320,160))
-                    image = ((image / 255) - .5) * 2 # Simple preprocessing
+                    image = frame2numpy(frame, (320, 160))
+                    image = ((image / 255) - .5) * 2  # Simple preprocessing
                     
                     # Train test split
                     # TODO: Dynamic train test split | Test series at end of batch
