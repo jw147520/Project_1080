@@ -14,6 +14,9 @@ def load_batches(verbose=1, samples_per_batch=1000):
     print("fuck you")
     dataset = gzip.open(dataset_path)
     batch_count = 0
+    abandon = 60  # 처음 버릴 frame 수
+    # 시작시 끊김 현상, 상/하단부 메시지 등 ... 때문에
+
     while True:
         try:
             x_train = []
@@ -21,12 +24,22 @@ def load_batches(verbose=1, samples_per_batch=1000):
             x_test = []
             y_test = []
             count = 0
+
             print('----------- On Batch: ' + str(batch_count) + ' -----------')
             while count < samples_per_batch:
-                    data_dct = pickle.load(dataset)
-                    frame = data_dct['frame']
-                    image = frame2numpy(frame, (800, 600))
-                    print(image)
+                    data_dct = pickle.load(dataset)  # 참고: pickle.load() 는 파일에서 한 줄씩 읽어온다.
+
+                    if count < abandon:  # abandon 만큼 첫 frame 은 버린다.
+                        count += 1
+                        continue
+
+                    image = data_dct['frame']
+                    # create_dataset.py 에서
+                    # client.recvMessage_noSave() 를 통해서 message 를 받아오고
+                    # client.save_to_datafile() 을 통해서 저장했다면 아래처럼
+                    # frame2numpy() 를 해줄 필요가 없다.
+                    # image = frame2numpy(frame, (800, 600))
+
                     cv2.imshow('imgae', image)
                     cv2.waitKey(0)
                     image = ((image / 255) - .5) * 2  # Simple preprocessing

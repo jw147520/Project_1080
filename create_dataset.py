@@ -46,7 +46,7 @@ time = [12, 0]  # 시간
 drivingMode = [786603, 40.0]  # 운전모드 [mode flag, maximum speed]
 location = [-2573.13916015625, 3292.256103515625, 13.241103172302246]  # 시작 위치
 frame = [800, 600]  # 화면 크기
-dataset_path = 'dataset.pz'
+dataset_path = 'dataset_test.pz'
 
 """ 
 자세한 flag 정보는 http://gtaforums.com/topic/822314-guide-driving-styles/ 참고
@@ -102,6 +102,16 @@ if __name__ == '__main__':
             break
 
         try:
+            # 처음 frame 들은 버린다.
+            # 시작시 끊김 현상, 상/하단부 메시지 등 ... 때문에
+            """ 여기서 버리는 것보다는 preprocessing 에서 버리는게 나을 듯 하다.
+            dataset 을 모을 때마다 버려야하는 프레임의 수가 유동적인 듯 하다.
+            if count <= 60:
+                count += 1
+                continue
+            """
+
+
             # Message received as a Python dictionary - 실질적으로 data 를 읽어온다.
             # rate 관리도 여기서 일어나는 듯 하다.
             message = client.recvMessage_notSave()
@@ -111,10 +121,6 @@ if __name__ == '__main__':
 
             # datafile 에 저장한다!!!
             client.save_to_datafile(frame_img, message)
-
-            if count == 0:
-                print(message)
-                print(frame_img)
 
             if started is False:
                 start_time = datetime.datetime.now()
