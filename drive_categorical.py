@@ -37,11 +37,12 @@ while True:
         decimal_prediction = (category_prediction - 500) / 500
         print('Category: ' + str(category_prediction) + '     Decimal: ' + str(decimal_prediction))
 
-        client.sendMessage(Commands(0.0,0.0,decimal_prediction * 3)) # Mutiplication scales decimal prediction for harder turning
+        client.sendMessage(Commands(0.0, 0.0, decimal_prediction * 3))
+        # Mutiplication scales decimal prediction for harder turning
         count += 1
     except Exception as e:
         print("Excepted as: " + str(e))
         continue
 
-client.sendMessage(Stop()) # Stops DeepGTAV
+client.sendMessage(Stop())  # Stops DeepGTAV
 client.close()

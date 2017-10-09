@@ -33,5 +33,7 @@ def _get_windows_bytitle(title_text, exact=False):
 
 hwnd_list = _get_windows_bytitle("Grand Theft Auto V", exact=True)
 
-for hwnd in hwnd_list:
-    screenshot(hwnd=hwnd)
+print(len(hwnd_list))
+
+
+screenshot(hwnd=hwnd_list[0])
