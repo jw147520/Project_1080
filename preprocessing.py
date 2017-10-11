@@ -59,6 +59,7 @@ def load_batches(verbose=1, samples_per_batch=1000):
 
                     # 아래 Simple preprocessing 은 그냥 down sizing 인듯 하다.
                     # image normalization 을 하면 필요 없을듯 하다. <중요>
+                    # image = normalize(image)  # Normalization
                     image = ((image / 255) - .5) * 2  # Simple preprocessing
                     
                     # Train test split
