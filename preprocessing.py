@@ -9,9 +9,22 @@ import cv2
 dataset_path = 'dataset.pz'
 
 
+# 그냥 아래의 수치를 그대로 쓰면 되나??
+def normalize(image):
+    image[:, :, 0] -= 94.9449
+    image[:, :, 0] /= 58.6121
+
+    image[:, :, 1] -= 103.599
+    image[:, :, 1] /= 61.6239
+
+    image[:, :, 2] -= 92.9077
+    image[:, :, 2] /= 68.66
+
+    return image
+
 def load_batches(verbose=1, samples_per_batch=1000):
     # Generator for loading batches of frames
-    print("fuck you")
+
     dataset = gzip.open(dataset_path)
     batch_count = 0
     abandon = 60  # 처음 버릴 frame 수
@@ -29,7 +42,7 @@ def load_batches(verbose=1, samples_per_batch=1000):
             while count < samples_per_batch:
                     data_dct = pickle.load(dataset)  # 참고: pickle.load() 는 파일에서 한 줄씩 읽어온다.
 
-                    if count < abandon:  # abandon 만큼 첫 frame 은 버린다.
+                    if batch_count == 0 and count < abandon:  # abandon 만큼 첫 frame 은 버린다.
                         count += 1
                         continue
 
@@ -40,8 +53,12 @@ def load_batches(verbose=1, samples_per_batch=1000):
                     # frame2numpy() 를 해줄 필요가 없다.
                     # image = frame2numpy(frame, (800, 600))
 
-                    cv2.imshow('imgae', image)
-                    cv2.waitKey(0)
+                    # imshow 는 테스트 코드였음. 추후에 지워줄것!!
+                    # cv2.imshow('imgae', image)
+                    # cv2.waitKey(0)
+
+                    # 아래 Simple preprocessing 은 그냥 down sizing 인듯 하다.
+                    # image normalization 을 하면 필요 없을듯 하다. <중요>
                     image = ((image / 255) - .5) * 2  # Simple preprocessing
                     
                     # Train test split

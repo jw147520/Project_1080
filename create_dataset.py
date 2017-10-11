@@ -39,7 +39,7 @@ def screenshot(hwnd=None):
     return bgr
 
 
-# Dataset 을 수집할 환경을 정의하는 변수들
+# -----------------     Dataset 을 수집할 환경을 정의하는 변수들    ----------------- #
 weather = 'EXTRASUNNY'  # 날씨
 vehicle = 'blista'  # 차량
 time = [12, 0]  # 시간
@@ -47,6 +47,7 @@ drivingMode = [786603, 40.0]  # 운전모드 [mode flag, maximum speed]
 location = [-2573.13916015625, 3292.256103515625, 13.241103172302246]  # 시작 위치
 frame = [800, 600]  # 화면 크기
 dataset_path = 'dataset_test.pz'
+#  ---------------------------------------------------------------------------------  #
 
 """ 
 자세한 flag 정보는 http://gtaforums.com/topic/822314-guide-driving-styles/ 참고
