@@ -25,9 +25,13 @@ def normalize(image):
 def load_batches(verbose=1, samples_per_batch=1000):
     # Generator for loading batches of frames
 
+    print("Loading dataset file...")
     dataset = gzip.open(dataset_path)
+    print("Finished loading dataset file.")
+
     batch_count = 0
     abandon = 60  # 처음 버릴 frame 수
+    abandoned = False
     # 시작시 끊김 현상, 상/하단부 메시지 등 ... 때문에
 
     while True:
@@ -42,9 +46,13 @@ def load_batches(verbose=1, samples_per_batch=1000):
             while count < samples_per_batch:
                     data_dct = pickle.load(dataset)  # 참고: pickle.load() 는 파일에서 한 줄씩 읽어온다.
 
-                    if batch_count == 0 and count < abandon:  # abandon 만큼 첫 frame 은 버린다.
+                    if batch_count == 0 and abandoned is False and count < abandon:  # abandon 만큼 첫 frame 은 버린다.
                         count += 1
+                        if count == abandon:
+                            count = 0
+                            abandoned = True
                         continue
+
 
                     image = data_dct['frame']
                     # create_dataset.py 에서
@@ -66,12 +74,16 @@ def load_batches(verbose=1, samples_per_batch=1000):
                     # TODO: Dynamic train test split | Test series at end of batch
                     if (count % 5) != 0:  # Train
                         x_train.append(image)
+                        # SantosNet 에서는 steering 을 1~1000 의 정수로 categorize 하였음.
                         # Steering in dict is between -1 and 1, scale to between 0 and 999 for categorical input
-                        y_train.append(int(float(data_dct['steering']) * 500) + 500) 
-                    else: # Test
+                        # y_train.append(int(float(data_dct['steering']) * 500) + 500)
+                        y_train.append(data_dct['steering'])
+                    else:  # Test
                         x_test.append(image)
+                        # SantosNet 에서는 steering 을 1~1000 의 정수로 categorize 하였음.
                         # Steering in dict is between -1 and 1, scale to between 0 and 999 for categorical input
-                        y_test.append(int(float(data_dct['steering']) * 500) + 500)
+                        # y_test.append(int(float(data_dct['steering']) * 500) + 500)
+                        y_test.append(data_dct['steering'])
                     
                     count += 1
                     if (count % 250) == 0 and verbose == 1:

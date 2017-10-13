@@ -64,7 +64,6 @@ class Client:
         if not frame: 
             print('ERROR: Failed to receive frame')     
             return None
-        print(frame)
         data = self._recvall()
         if not data: 
             print('ERROR: Failed to receive message')       
