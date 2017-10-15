@@ -1,3 +1,4 @@
 *.pz
-*.pyc
+__pycache__/
+deepgtav/__pycache/
 *.h5

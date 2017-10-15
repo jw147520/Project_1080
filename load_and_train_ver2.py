@@ -32,14 +32,14 @@ try:
 
             # Fit model to batch
             # for x1, y1, x2, y2 in x_train, y_train, x_test, y_test:
-            #     model.fit(x1, y1, verbose=1, epochs=1, validation_data=(x2, y2))
+            #    model.fit(x1, y1, verbose=1, epochs=1, validation_data=(x2, y2))
             model.fit(x_train, y_train, verbose=1, epochs=1, validation_data=(x_test, y_test))
 
             batch_count += 1
             # Save a checkpoint
             if (batch_count % 20) == 0:
                 print('Saving checkpoint ' + str(batch_count))
-                model.save('model_checkpoint' + str(batch_count) + '.h5')
+                model.save('model_checkpoint_3_' + str(batch_count) + '.h5')
                 print('Checkpoint saved. Continuing...')
 except Exception as e:
     print('Excepted with ' + str(e))

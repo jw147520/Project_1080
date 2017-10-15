@@ -37,7 +37,7 @@ def screenshot(hwnd=None):
 
 
 print("Loading Model...")
-model = load_model('model_checkpoint420.h5')
+model = load_model('model_checkpoint_3_420.h5')
 print("Model Loaded. Compiling...")
 sgd = SGD(lr=1e-3, decay=1e-4, momentum=0.9, nesterov=True)  # SGD Optimizer 사용
 model.compile(optimizer=sgd, loss="mse")  # loss function 은 논문을 따라 "mean squared error"
@@ -75,7 +75,7 @@ while True:
         print(prediction[0][0])
         steering = prediction[0][0]
         steering = float(steering)
-        client.sendMessage(Commands(0.0, 0.0, steering=steering*3))
+        client.sendMessage(Commands(0.0, 0.0, steering=steering))
         # Mutiplication scales decimal prediction for harder turning
         count += 1
     except Exception as e:
