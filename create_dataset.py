@@ -103,16 +103,6 @@ if __name__ == '__main__':
             break
 
         try:
-            # 처음 frame 들은 버린다.
-            # 시작시 끊김 현상, 상/하단부 메시지 등 ... 때문에
-            """ 여기서 버리는 것보다는 preprocessing 에서 버리는게 나을 듯 하다.
-            dataset 을 모을 때마다 버려야하는 프레임의 수가 유동적인 듯 하다.
-            if count <= 60:
-                count += 1
-                continue
-            """
-
-
             # Message received as a Python dictionary - 실질적으로 data 를 읽어온다.
             # rate 관리도 여기서 일어나는 듯 하다.
             message = client.recvMessage_notSave()
@@ -137,6 +127,7 @@ if __name__ == '__main__':
             if (count % 1000) == 0:
                 if (int(new_location[0]) == int(old_location[0]) and int(new_location[1]) == int(old_location[1]) and
                         int(new_location[2]) == int(old_location[2])):
+                    print("reset location at " + str(current_time))
                     reset()
 
                 old_location = message['location']
