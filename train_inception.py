@@ -8,11 +8,12 @@ import h5py
 from preprocessing import load_batches
 from keras.models import load_model
 from keras.utils import np_utils
-from model_inception import *
+import keras.applications.inception_v3 as inception
+from model import *
 
 input_shape = (600, 800, 3)  # input shape 을 이미지의 shape 에서 바로 읽어오도록 바꿀 필요가 있음
 print("Loading Model ...")
-model = get_model(input_shape=input_shape)
+model = get_inception(input_shape=input_shape, nb_class=1000)
 # model = load_model('model_checkpoint.h5')  # 학습을 진행한 모델이 존재한다면 이 줄을 사용.
 print("Model Loaded. Compiling...")
 sgd = SGD(lr=1e-3, decay=1e-4, momentum=0.9, nesterov=True)  # SGD Optimizer 사용
