@@ -2,3 +2,4 @@
 __pycache__/
 deepgtav/__pycache/
 *.h5
+*.txt
