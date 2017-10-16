@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*- #
-""" Train Inception V3 model for Keras.
-
+"""
+Train Inception V3 model for Keras.
 """
 import warnings
 import numpy as np
@@ -17,7 +17,7 @@ model = get_model(input_shape=input_shape)
 print("Model Loaded. Compiling...")
 sgd = SGD(lr=1e-3, decay=1e-4, momentum=0.9, nesterov=True)  # SGD Optimizer 사용
 model.compile(optimizer=sgd, loss="mse")  # loss function 은 논문을 따라 "mean squared error"
-model.summary()
+model.summary()  # model summary 출력
 
 print("Starting Training...")
 batch_count = 0
@@ -29,7 +29,9 @@ try:
             x_train = np.array(x_train)
             x_test = np.array(x_test)
 
-            # SantosNet 에서는 steering 을 1~1000 으로 categorize 하여 사용하였으나 이렇게 하지 않을거임.
+            # Inception V3 의 기본 구조인 classes=1000 (ImageNet data 의 특성 때문) 을 바꾸지 않고
+            # 학습하기 위해 numeric value 를 categorical 로 바꿔준다.
+            # SantosNet 참고.
             # Classification to one-hot vector
             y_train = np_utils.to_categorical(y_train, num_classes=1000)
             y_test = np_utils.to_categorical(y_test, num_classes=1000)
@@ -43,10 +45,10 @@ try:
             # Save a checkpoint
             if (batch_count % 20) == 0:
                 print('Saving checkpoint ' + str(batch_count))
-                model.save('model_checkpoint' + str(batch_count) + '.h5')
+                model.save('v3_model_checkpoint' + str(batch_count) + '.h5')
                 print('Checkpoint saved. Continuing...')
 except Exception as e:
     print('Excepted with ' + str(e))
     print('Saving model...')
-    model.save('model_trained.h5')
+    model.save('model_trained_v3.h5')
     print('Model saved.')
