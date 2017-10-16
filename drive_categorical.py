@@ -49,7 +49,8 @@ if input("Continue?") == "y": # Wait until you load GTA V to continue, else can'
 # Loads into a consistent starting setting 
 print("Loading Scenario...")
 client = Client(ip='localhost', port=8000) # Default interface
-scenario = Scenario(weather='EXTRASUNNY',vehicle='blista',time=[12,0],drivingMode=-1,location=[-2573.13916015625, 3292.256103515625, 13.241103172302246])
+scenario = Scenario(weather='EXTRASUNNY',vehicle='blista',time=[12,0],drivingMode=-1,
+                    location=[-2573.13916015625, 3292.256103515625, 13.241103172302246])
 client.sendMessage(Start(scenario=scenario))
 hwnd_list = _get_windows_bytitle("Grand Theft Auto V", exact=True)  # window 를 받아온다.
 

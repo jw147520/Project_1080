@@ -45,8 +45,8 @@ vehicle = 'blista'  # 차량
 time = [12, 0]  # 시간
 drivingMode = [786603, 40.0]  # 운전모드 [mode flag, maximum speed]
 location = [-2573.13916015625, 3292.256103515625, 13.241103172302246]  # 시작 위치
-frame = [800, 600]  # 화면 크기 <중요> 이거 원래는 [600, 800] 이어야 맞는건가?
-dataset_path = 'dataset_test.pz'
+frame = [600, 800]  # 화면 크기 <중요> 이거 원래는 [600, 800] 이어야 맞는건가?
+dataset_path = 'dataset_10hr_2.pz'
 #  ---------------------------------------------------------------------------------  #
 
 """ 
@@ -65,7 +65,7 @@ def reset():
     # Resets position of the car to the starting location
     dataset = Dataset(rate=30, frame=frame, throttle=True, brake=True, steering=True, location=True, drivingMode=True)
     scenario = Scenario(weather=weather, vehicle=vehicle, time=time, drivingMode=drivingMode, location=location)
-    Client.sendMessage(Config(scenario=scenario, dataset=dataset))
+    Client.sendMessage(Config(scenario=scenario, dataset=dataset).to_json())
 
 
 # Stores a picked dataset file with data coming from DeepGTAV
@@ -138,6 +138,7 @@ if __name__ == '__main__':
                 if (int(new_location[0]) == int(old_location[0]) and int(new_location[1]) == int(old_location[1]) and
                         int(new_location[2]) == int(old_location[2])):
                     reset()
+                    #print("stop???")
 
                 old_location = message['location']
                 # print('At location: ' + str(old_location))
