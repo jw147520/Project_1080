@@ -20,6 +20,9 @@ sgd = SGD(lr=1e-3, decay=1e-4, momentum=0.9, nesterov=True)  # SGD Optimizer 사
 model.compile(optimizer=sgd, loss="mse")  # loss function 은 논문을 따라 "mean squared error"
 model.summary()  # model summary 출력
 
+# loss 기록을 위한 txt 파일
+f = open("loss_inception_1.txt", 'w')
+
 print("Starting Training...")
 batch_count = 0
 try:
@@ -40,14 +43,18 @@ try:
             # Fit model to batch
             # for x1, y1, x2, y2 in x_train, y_train, x_test, y_test:
             #     model.fit(x1, y1, verbose=1, epochs=1, validation_data=(x2, y2))
-            model.fit(x_train, y_train, verbose=1, epochs=1, validation_data=(x_test, y_test))
+            train_history = model.fit(x_train, y_train, verbose=1, epochs=1, validation_data=(x_test, y_test))
+
+            # batch_count trainint_loss valication_loss 의 형태로 기록
+            f.write(str(batch_count) + ' ' + str(train_history.history['loss']) + ' ' + str(train_history.history['val_loss']))
 
             batch_count += 1
             # Save a checkpoint
-            if (batch_count % 20) == 0:
+            if (batch_count % 100) == 0:
                 print('Saving checkpoint ' + str(batch_count))
                 model.save('v3_model_checkpoint' + str(batch_count) + '.h5')
                 print('Checkpoint saved. Continuing...')
+
 except Exception as e:
     print('Excepted with ' + str(e))
     print('Saving model...')

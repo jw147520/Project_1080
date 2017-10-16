@@ -6,7 +6,7 @@ import gzip
 from deepgtav.messages import frame2numpy
 import cv2
 
-dataset_path = 'dataset.pz'
+dataset_path = 'dataset_10hr.pz'
 
 
 # 그냥 아래의 수치를 그대로 쓰면 되나??
