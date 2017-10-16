@@ -6,16 +6,42 @@ from sklearn.utils import shuffle
 import keras
 from keras.models import Sequential
 from keras.models import load_model
+from keras.models import Model
 
 from keras.layers import Flatten, Dense
 from keras.layers import BatchNormalization
 from keras.layers import Conv2D
+from keras.layers import GlobalAveragePooling2D
 
 from keras.optimizers import SGD
 from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import CSVLogger, ModelCheckpoint
 
+from keras.applications.inception_v3 import *
+
+# add new last layer, specifically fully-connected layer at the top of the network
+def add_new_last_layer(base_model, nb_classes):
+    """
+    Add last FC layer at the top of the network
+    :param base_model: keras model excluding top
+    :param nb_classes: number of classes
+    :return: new keras model with top layer
+    """
+    x = base_model.output
+    x = GlobalAveragePooling2D(name='avg_pool')(x)
+    x = Dense(nb_classes, activation='softmax', name='predictions')(x)
+    model = Model(input=base_model.input, output=x)
+    return model
+
+
+# get InceptionV3 model
+def get_inception(input_shape, nb_class):
+
+    model = InceptionV3(include_top=False, weights='imagenet', input_shape=input_shape, classes=nb_class)
+    model = add_new_last_layer(model, nb_class)
+
+    return model
 
 # CNN architector of " End-to-End Learning for Self-Driving Cars"
 # https://github.com/marshq/europilot
