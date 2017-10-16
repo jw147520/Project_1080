@@ -9,6 +9,25 @@ import cv2
 import numpy as np
 from PIL import ImageGrab
 
+model_path = 'model_checkpoint420.h5'
+# -----------------     drive 환경을 정의하는 변수들    ----------------- #
+weather = 'EXTRASUNNY'  # 날씨
+vehicle = 'blista'  # 차량
+time = [12, 0]  # 시간
+drivingMode = [786603, 40.0]  # 운전모드 [mode flag, maximum speed]
+location = [-2573.13916015625, 3292.256103515625, 13.241103172302246]  # 시작 위치
+frame = [600, 800]  # 화면 크기 <중요> 이거 원래는 [600, 800] 이어야 맞는건가?
+#  ---------------------------------------------------------------------------------  #
+""" 
+자세한 flag 정보는 http://gtaforums.com/topic/822314-guide-driving-styles/ 참고
+----------------------  DRIVING MODES  ----------------------
+FLAGS - CONVERTED INTEGER - NAME/DESC OF THE DRIVING STYLE
+01000000000011000000000000100101 - 1074528293 -  "Rushed"
+00000000000011000000000000100100 - 786468 - "Avoid Traffic"
+00000000000000000000000000000110 - 6 - "Avoid Traffic Extremely"
+00000000000011000000000010101011 - 786603 - "Normal"
+00000000001011000000000000100101 - 2883621 - "Ignore Lights"
+"""
 
 # window title 로 해당 window 를 가져오는 함수
 def _get_windows_bytitle(title_text, exact=False):
@@ -49,7 +68,7 @@ if input("Continue?") == "y": # Wait until you load GTA V to continue, else can'
 # Loads into a consistent starting setting 
 print("Loading Scenario...")
 client = Client(ip='localhost', port=8000) # Default interface
-scenario = Scenario(weather='EXTRASUNNY',vehicle='blista',time=[12,0],drivingMode=-1,location=[-2573.13916015625, 3292.256103515625, 13.241103172302246])
+scenario = Scenario(weather=weather, vehicle=vehicle, time=time, drivingMode=-1, location=location)
 client.sendMessage(Start(scenario=scenario))
 hwnd_list = _get_windows_bytitle("Grand Theft Auto V", exact=True)  # window 를 받아온다.
 
@@ -70,11 +89,9 @@ while True:
 
         # Converts classification to float for steering input
         prediction = model.predict(frame_image)
-        # decimal_prediction = (category_prediction - 500) / 500
-        # print('Category: ' + str(category_prediction) + '     Decimal: ' + str(decimal_prediction))
-        print(prediction[0][0])
-        steering = prediction[0][0]
-        steering = float(steering)
+        decimal_prediction = (category_prediction - 500) / 500
+        print('Category: ' + str(category_prediction) + '     Decimal: ' + str(decimal_prediction))
+        steering = decimal_prediction
         client.sendMessage(Commands(0.0, 0.0, steering=steering*3))
         # Mutiplication scales decimal prediction for harder turning
         count += 1
