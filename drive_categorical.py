@@ -88,7 +88,7 @@ while True:
         frame_image = np.reshape(frame_image, (1,) + frame_image.shape)
 
         # Converts classification to float for steering input
-        prediction = model.predict(frame_image)
+        category_prediction = model.predict(frame_image)
         decimal_prediction = (category_prediction - 500) / 500
         print('Category: ' + str(category_prediction) + '     Decimal: ' + str(decimal_prediction))
         steering = decimal_prediction
