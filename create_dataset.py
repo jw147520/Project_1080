@@ -65,7 +65,7 @@ def reset():
     # Resets position of the car to the starting location
     dataset = Dataset(rate=30, frame=frame, throttle=True, brake=True, steering=True, location=True, drivingMode=True)
     scenario = Scenario(weather=weather, vehicle=vehicle, time=time, drivingMode=drivingMode, location=location)
-    Client.sendMessage(Config(scenario=scenario, dataset=dataset))
+    Client.sendMessage(Config(scenario=scenario, dataset=dataset).to_json())
 
 
 # Stores a picked dataset file with data coming from DeepGTAV

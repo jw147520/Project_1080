@@ -13,23 +13,24 @@ from __future__ import absolute_import
 
 import warnings
 
-from ..models import Model
-from .. import layers
-from ..layers import Activation
-from ..layers import Dense
-from ..layers import Input
-from ..layers import BatchNormalization
-from ..layers import Conv2D
-from ..layers import MaxPooling2D
-from ..layers import AveragePooling2D
-from ..layers import GlobalAveragePooling2D
-from ..layers import GlobalMaxPooling2D
-from ..engine.topology import get_source_inputs
-from ..utils.data_utils import get_file
-from .. import backend as K
-from . import imagenet_utils
-from .imagenet_utils import decode_predictions
-from .imagenet_utils import _obtain_input_shape
+from keras.models import Model
+import keras.layers
+from keras.layers import Activation
+from keras.layers import Dense
+from keras.layers import Input
+from keras.layers import BatchNormalization
+from keras.layers import Conv2D
+from keras.layers import MaxPooling2D
+from keras.layers import AveragePooling2D
+from keras.layers import GlobalAveragePooling2D
+from keras.layers import GlobalMaxPooling2D
+from keras.engine.topology import get_source_inputs
+from keras.utils.data_utils import get_file
+import keras.backend as K
+import keras.imagenet_utils
+from keras.imagenet_utils import decode_predictions
+from keras.imagenet_utils import _obtain_input_shape
+
 
 
 WEIGHTS_PATH = 'https://github.com/fchollet/deep-learning-models/releases/download/v0.5/inception_v3_weights_tf_dim_ordering_tf_kernels.h5'
