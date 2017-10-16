@@ -53,17 +53,7 @@ def load_batches(verbose=1, samples_per_batch=1000):
                             abandoned = True
                         continue
 
-
                     image = data_dct['frame']
-                    # create_dataset.py 에서
-                    # client.recvMessage_noSave() 를 통해서 message 를 받아오고
-                    # client.save_to_datafile() 을 통해서 저장했다면 아래처럼
-                    # frame2numpy() 를 해줄 필요가 없다.
-                    # image = frame2numpy(frame, (800, 600))
-
-                    # imshow 는 테스트 코드였음. 추후에 지워줄것!!
-                    # cv2.imshow('imgae', image)
-                    # cv2.waitKey(0)
 
                     # 아래 Simple preprocessing 은 그냥 down sizing 인듯 하다.
                     # image normalization 을 하면 필요 없을듯 하다. <중요>
@@ -75,10 +65,9 @@ def load_batches(verbose=1, samples_per_batch=1000):
                     # TODO: Dynamic train test split | Test series at end of batch
                     if (count % 5) != 0:  # Train
                         x_train.append(image)
-                        # SantosNet 에서는 steering 을 1~1000 의 정수로 categorize 하였음.
                         # Steering in dict is between -1 and 1, scale to between 0 and 999 for categorical input
-                        # y_train.append(int(float(data_dct['steering']) * 500) + 500)
-                        y_train.append(data_dct['steering'])
+                        # y_train.append(int(float(data_dct['steering']) * 500) + 500)  # for categorical
+                        y_train.append(data_dct['steering'])  # for numeric
                     else:  # Test
                         x_test.append(image)
                         # SantosNet 에서는 steering 을 1~1000 의 정수로 categorize 하였음.
