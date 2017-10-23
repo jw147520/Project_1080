@@ -10,7 +10,7 @@ import numpy as np
 from PIL import ImageGrab
 from preprocessing import normalize
 
-model_path = 'model_checkpoint420.h5'
+model_path = 'model_checkpoint_numeric_ver2_280.h5'
 # -----------------     drive 환경을 정의하는 변수들    ----------------- #
 weather = 'EXTRASUNNY'  # 날씨
 vehicle = 'blista'  # 차량
@@ -79,7 +79,7 @@ print("Starting Loop...")
 while True:
     try:
         # Collect and preprocess image
-        message = client.recvMessage()
+        # message = client.recvMessage()
         # window title 을 이용해 받아온 window 에서 frame 을 따온다.
         # 기존의 기능에서 이를 제대로 지원하지 않는듯 하기 때문에 추가로 작성함.
         frame_image = screenshot(hwnd=hwnd_list[0])
@@ -87,14 +87,14 @@ while True:
         frame_image = ((frame_image / 255) - .5) * 2  # Simple preprocessing
 
         # Corrects for model input shape
-        frame_image = image.img_to_array(frame_image)
+        # frame_image = image.img_to_array(frame_image)
         frame_image = np.reshape(frame_image, (1,) + frame_image.shape)
 
         prediction = model.predict(frame_image)
         steering = prediction[0][0]
         steering = float(steering)
         print("predicted steering : " + str(steering))
-        client.sendMessage(Commands(0.0, 0.0, steering=steering*3))
+        client.sendMessage(Commands(0.0, 0.0, steering=steering))
         # Mutiplication scales decimal prediction for harder turning
         count += 1
 

@@ -6,6 +6,9 @@ import numpy as np
 from deepgtav.messages import frame2numpy
 import matplotlib.pyplot as plt
 
+import time
+import datetime
+
 dataset_path = 'dataset.pz'
 dataset = gzip.open(dataset_path)
 
@@ -17,6 +20,11 @@ count = 0
 augmented_count = 0
 abandon_count = 0
 near_zero = 0
+
+# record start time
+ts = time.time()
+start_time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+
 while True:
     count += 1
     print("Processing %d images ... " % count)
@@ -41,9 +49,11 @@ while True:
 
             data_dct['steering'] = original_steering - 0.00001
             pickle.dump(data_dct, pickleFile)  # dump original image with distorted steering value 1
+            values.append(data_dct['steering'])
 
             data_dct['steering'] = original_steering + 0.00001
             pickle.dump(data_dct, pickleFile)  # dump original image with distorted steering value 2
+            values.append(data_dct['steering'])
 
             # left-right flip
             original_steering = original_steering * (-1)  # sign change
@@ -52,12 +62,15 @@ while True:
             data_dct['frame'] = image
             data_dct['steering'] = original_steering
             pickle.dump(data_dct, pickleFile)  # dump flipped image with sign change
+            values.append(data_dct['steering'])
 
             data_dct['steering'] = original_steering - 0.00001
             pickle.dump(data_dct, pickleFile)  # dump flipped image with distorted steering value 1
+            values.append(data_dct['steering'])
 
             data_dct['steering'] = original_steering + 0.00001
             pickle.dump(data_dct, pickleFile)  # dump flipped image with distorted steering value 2
+            values.append(data_dct['steering'])
 
         else:  # -0.0625 ~ 0.0625 사이의 값은 충분히 많다고 판단하여 반으로 줄인다.
             near_zero += 1
@@ -68,18 +81,26 @@ while True:
             else:
                 abandon_count += 1
 
+    except [IOError, 28]:
+        print("No space left on the device!!!")
+        break
+
     except EOFError:
         break
 
+ts = time.time()
+end_time = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+
 print("Data Augmentation Finished!!")
+print("Started at " + str(start_time))
+print("Ended at " + str(end_time))
 print("# of data before : %d" % count)
 print("# of data after : %d" % (count - abandon_count + augmented_count))
 
-"""
 plt.hist(values, bins=200)
 plt.title("steering values distribution")
 plt.xlabel("Steering Value")
 plt.ylabel("Count")
 plt.show()
-"""
+
 
