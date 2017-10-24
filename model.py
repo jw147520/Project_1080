@@ -51,8 +51,8 @@ def get_inception(input_shape, nb_class):
 # CNN architecture of " End-to-End Learning for Self-Driving Cars"
 def get_nvidia_model(input_shape):
     model = Sequential([
-        Lambda(BatchNormalization(epsilon=0.001, axis=1, input_shape=input_shape)),
-        Conv2D(24, kernel_size=(5, 5), border_mode='valid', strides=(2, 2), activation='relu', input_shape=input_shape),
+        BatchNormalization(epsilon=0.001, axis=1, input_shape=input_shape),
+        Conv2D(24, kernel_size=(5, 5), border_mode='valid', strides=(2, 2), activation='relu'),
         Dropout(0.2),
         Conv2D(36, kernel_size=(5, 5), strides=(2, 2), activation='relu'),
         Dropout(0.2),

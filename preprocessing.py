@@ -3,7 +3,7 @@ import gzip
 from deepgtav.messages import frame2numpy
 
 
-dataset_path = 'dataset.pz'
+dataset_path = 'F:/augmented_data.pz'
 
 
 def load_batches_numeric(verbose=1, samples_per_batch=100):
@@ -37,8 +37,7 @@ def load_batches_numeric(verbose=1, samples_per_batch=100):
                             abandoned = True
                         continue
 
-                    # image = frame2numpy(data_dct['frame'], (800, 600))
-                    image = data_dct['frame']  # data augmentation 과정에서 이미 frame2numpy 를 거쳐 넘어온다.
+                    image = frame2numpy(data_dct['frame'], (800, 600))
 
                     steering = data_dct['steering']
 
