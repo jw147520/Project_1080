@@ -63,13 +63,13 @@ sgd = SGD(lr=1e-3, decay=1e-4, momentum=0.9, nesterov=True)  # SGD Optimizer 사
 model.compile(optimizer=sgd, loss="mse")  # loss function 은 논문을 따라 "mean squared error"
 model.summary()
 
-if input("Continue?") == "y": # Wait until you load GTA V to continue, else can't connect to DeepGTAV
+if input("Continue?") == "y":  # Wait until you load GTA V to continue, else can't connect to DeepGTAV
     print("Conintuing...")
 
 # Loads into a consistent starting setting
 print("Loading Scenario...")
-client = Client(ip='localhost', port=8000) # Default interface
-scenario = Scenario(weather=weather, vehicle=vehicle, time=time, drivingMode=-1,location=location)
+client = Client(ip='localhost', port=8000)  # Default interface
+scenario = Scenario(weather=weather, vehicle=vehicle, time=time, drivingMode=-1, location=location)
 client.sendMessage(Start(scenario=scenario))
 
 hwnd_list = _get_windows_bytitle("Grand Theft Auto V", exact=True)  # window 를 받아온다.
