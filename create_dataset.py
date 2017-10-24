@@ -46,7 +46,7 @@ time = [12, 0]  # 시간
 drivingMode = [786603, 40.0]  # 운전모드 [mode flag, maximum speed]
 location = [-2573.13916015625, 3292.256103515625, 13.241103172302246]  # 시작 위치
 frame = [800, 600]  # 화면 크기 <중요> 이거 원래는 [600, 800] 이어야 맞는건가?
-dataset_path = 'dataset_test.pz'
+dataset_path = 'dataset_10hr.pz'
 #  ---------------------------------------------------------------------------------  #
 
 """ 
@@ -65,7 +65,7 @@ def reset():
     # Resets position of the car to the starting location
     dataset = Dataset(rate=30, frame=frame, throttle=True, brake=True, steering=True, location=True, drivingMode=True)
     scenario = Scenario(weather=weather, vehicle=vehicle, time=time, drivingMode=drivingMode, location=location)
-    Client.sendMessage(Config(scenario=scenario, dataset=dataset).to_json())
+    Client.sendMessage(Config(scenario=scenario, dataset=dataset))
 
 
 # Stores a picked dataset file with data coming from DeepGTAV
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     # Create a new connection to DeepGTAV using the specified IP and Port
     client = Client(ip=args.host, port=args.port, datasetPath=args.dataset_path, compressionLevel=9)
     # Dataset options
-    dataset = Dataset(rate=30, frame=frame, throttle=True, brake=True, steering=True, location=True, drivingMode=True,
+    dataset = Dataset(rate=20, frame=frame, throttle=True, brake=True, steering=True, location=True, drivingMode=True,
                       peds=True, reward=[15.0, 0.0], direction=None, speed=True, yawRate=True, time=True)
 
     # Automatic driving scenario - Dataset 을 구성할 Driving scenario 를 정의한다.
@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
     # GTAV 에 dataset path 와 scenario 를 전달하여 dataset 을 모으기 위한 환경을 실행한다.
     client.sendMessage(Start(dataset=dataset, scenario=scenario))  # Start request
-    hwnd_list = _get_windows_bytitle("Grand Theft Auto V", exact=True)  # window 를 받아온다.
+    # hwnd_list = _get_windows_bytitle("Grand Theft Auto V", exact=True)  # window 를 받아온다.
 
     # count 는 현재까지 받아온 frame 의 수를 의미한다.
     count = 0
@@ -98,31 +98,33 @@ if __name__ == '__main__':
 
     while True:  # Main Loop
         current_time = datetime.datetime.now()
-        if started is True and current_time >= start_time + datetime.timedelta(hours=3):
+        if started is True and current_time >= start_time + datetime.timedelta(hours=10):
             print("Finished recording at " + str(current_time))
             break
 
         try:
             # Message received as a Python dictionary - 실질적으로 data 를 읽어온다.
             # rate 관리도 여기서 일어나는 듯 하다.
-            message = client.recvMessage_notSave()
+            message = client.recvMessage()
             # window title 을 이용해 받아온 window 에서 frame 을 따온다.
             # 기존의 기능에서 이를 제대로 지원하지 않는듯 하기 때문에 추가로 작성함.
-            frame_img = screenshot(hwnd=hwnd_list[0])
+            # frame_img = screenshot(hwnd=hwnd_list[0])
 
             # datafile 에 저장한다!!!
-            client.save_to_datafile(frame_img, message)
+            # client.save_to_datafile(frame_img, message)
 
             if started is False:
                 start_time = datetime.datetime.now()
                 print("Start recording at " + str(start_time))
                 started = True
 
+            print(message['steering'])
             if (count % 100) == 0:
                 print(str(count) + " frames are recorded.")
-
+            """
             # Checks if car is sucked, resets position if it is.
             new_location = message['location']
+            
             # Float position converted to ints so it doesn't have to be in the exact same position to be reset
             if (count % 1000) == 0:
                 if (int(new_location[0]) == int(old_location[0]) and int(new_location[1]) == int(old_location[1]) and
@@ -132,6 +134,7 @@ if __name__ == '__main__':
 
                 old_location = message['location']
                 # print('At location: ' + str(old_location))
+            """
             count += 1
 
         except KeyboardInterrupt:

@@ -56,7 +56,7 @@ def screenshot(hwnd=None):
 
 
 print("Loading Model...")
-model = load_model('model_checkpoint420.h5')
+model = load_model('model_checkpoint_3_420.h5')
 print("Model Loaded. Compiling...")
 sgd = SGD(lr=1e-3, decay=1e-4, momentum=0.9, nesterov=True)  # SGD Optimizer 사용
 model.compile(optimizer=sgd, loss="mse")  # loss function 은 논문을 따라 "mean squared error"
@@ -68,7 +68,9 @@ if input("Continue?") == "y": # Wait until you load GTA V to continue, else can'
 # Loads into a consistent starting setting 
 print("Loading Scenario...")
 client = Client(ip='localhost', port=8000) # Default interface
+
 scenario = Scenario(weather=weather, vehicle=vehicle, time=time, drivingMode=-1, location=location)
+
 client.sendMessage(Start(scenario=scenario))
 hwnd_list = _get_windows_bytitle("Grand Theft Auto V", exact=True)  # window 를 받아온다.
 
@@ -93,6 +95,7 @@ while True:
         print('Category: ' + str(category_prediction) + '     Decimal: ' + str(decimal_prediction))
         steering = decimal_prediction
         client.sendMessage(Commands(0.0, 0.0, steering=steering*3))
+
         # Mutiplication scales decimal prediction for harder turning
         count += 1
     except Exception as e:

@@ -14,7 +14,7 @@ model.compile(optimizer='Adadelta', loss='categorical_crossentropy', metrics=['a
 print("Starting Training...")
 batch_count = 0
 try:
-    for i in range(0,5):
+    for i in range(0, 5):
         print('----------- On Epoch: ' + str(i) + ' ----------')
         for x_train, y_train, x_test, y_test in load_batches():   
             # Model input requires numpy array
